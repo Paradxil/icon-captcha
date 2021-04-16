@@ -51,7 +51,7 @@ class {
         });
     }
     submitCaptcha(event) {
-        if(this.state.submit || this.state.expired) {
+        if(this.state.submit || this.state.expired || this.state.loading || !this.state.loaded) {
             return;
         }
         this.state.submit = true;
@@ -93,6 +93,10 @@ style {
     .captcha-message {
         position: absolute;
         text-align: center;
+    }
+
+    .captcha-message .secondary {
+        font-size: 12px;
     }
 
     .not-loaded .captcha-image, .captcha-error .captcha-image{
@@ -196,14 +200,14 @@ div.captcha-wrapper class={"captcha-submit": state.submit, "captcha-error": stat
                 if(state.loading)
                     div.loading
                 else
-                    div -- CAPTCHA
-                    div -- hover to load
+                    div.primary -- CAPTCHA
+                    div.secondary -- hover/tap to load
             else-if(state.expired)
                 div -- CAPTCHA EXPIRED
-                div -- hover to load a new captcha
+                div.secondary -- hover/tap to load a new captcha
             else-if(state.submit)
-                div -- CAPTCHA SUBMIT
-                div -- to try a new captcha click refresh
+                div.primary -- CAPTCHA SUBMIT
+                div.secondary -- to try a new captcha click refresh
         img draggable='false' src=state.img on-click("submitCaptcha")
     div.captcha-footer
         div
