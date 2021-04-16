@@ -13,7 +13,7 @@ var fs = require('fs');
 var mongoose = require('mongoose');
 const { generateCaptcha, attemptCaptcha, verifyCaptcha } = require("./captcha.js");
 
-const captchaTemplate = require("../components/captcha/template.marko").default;
+const captchaTemplate = require("../components/template.marko").default;
 
 // Connect to database
 mongoose.connect('mongodb://' + process.env.DATABASEHOST + '/' + process.env.DATABASE, {
