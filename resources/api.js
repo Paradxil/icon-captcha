@@ -19,7 +19,7 @@ function loadCaptcha() {
         textArea.name = "captcha-id";
         textArea.style.display = "none";
 
-        var els = document.getElementsByClassName("captcha");
+        var els = document.getElementsByClassName("icon-captcha");
         
         for(let el of els) {
             textArea.id = "captcha-textarea";
