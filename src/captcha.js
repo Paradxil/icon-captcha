@@ -78,18 +78,26 @@ module.exports.attemptCaptcha = async function(attempt, id) {
             captcha.attempt = attempt;
             captcha.save();
         }
-        return true;
+        return module.exports.verifyCaptcha(id, false);
     }
     return false;
 }
 
-module.exports.verifyCaptcha = async function(id) {
+/**
+ * 
+ * @param {*} id The id of the captcha
+ * @param {Boolean} remove Default: true. Whether or not to remove the captcha after verification. Should be true.
+ * @returns {Boolean} Was the captcha successfully completed.
+ */
+module.exports.verifyCaptcha = async function(id, remove=true) {
     let captcha = await getCaptcha(id);
 
     if(captcha !== null) {
         
         try {
-            deleteCaptcha(id);
+            if(remove) {
+                deleteCaptcha(id);
+            }
         
             let solution = JSON.parse(captcha.solution);
             let attempt = JSON.parse(captcha.attempt);
@@ -165,7 +173,7 @@ async function addRandomIcon(ctx, width, height) {
 async function addIcon(ctx, icon, x, y, w, h) {
     return new Promise(async (resolve, reject) => {
         let svgimg = feather.icons[icon].toSvg({width: w, height: h});
-        
+
         const img = new Image();
         img.onload = async () => {ctx.drawImage(img, x, y, w, h);; resolve();};
         img.onerror = err => { reject(err); };

@@ -58,7 +58,7 @@ app.get('/captcha/img', async (req, res) => {
 
 app.post('/captcha', async (req, res) => {
     if(req.body === null || req.body.x === null || req.body.y === null) {
-        res.sendStatus(500);
+        res.sendStatus(403);
     } 
 
     let attempt = {
@@ -78,7 +78,7 @@ app.post('/captcha', async (req, res) => {
 
 app.post('/captcha/verify', async (req, res) => {
     if(req.body === null || req.body.id === null) {
-        res.sendStatus(500);
+        res.sendStatus(403);
     } 
 
     let verified = await verifyCaptcha(req.body.id||null);
