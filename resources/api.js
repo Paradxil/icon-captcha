@@ -14,7 +14,7 @@ function loadCaptcha() {
         ifrm.setAttribute("src", "{{HOST}}/captcha");
         ifrm.setAttribute("sandbox", "allow-same-origin allow-scripts");
         ifrm.style.width = "324px";
-        ifrm.style.height = "200px";
+        ifrm.style.height = "125px";
         ifrm.style.border = "none";
 
         var textArea = document.createElement("textarea");
