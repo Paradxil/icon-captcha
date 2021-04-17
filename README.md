@@ -38,7 +38,7 @@ If the captcha does not load automatically in your environment you may need to l
 window.loadCaptcha();
 loadCaptcha();
 ```
-##### Step 4: Obtain the captcha id on the server
+##### Step 4: Obtain the captcha id
 Upon successful completion of a captcha, the unique captcha id is stored in a form input. 
 You can access the captcha id via the `captchaid` POST parameter upon form submission.
 
@@ -63,5 +63,13 @@ TYPE: JSON
 ```
 `verified` is set to *true* for a successful captcha attempt and *false* for an incorrect captcha attempt.
 
+## Examples/Demo
+Coming soon
 
 ## Self Hosted
+Instructions coming soon.
+
+
+## Author
+Hunter Stratton
+
