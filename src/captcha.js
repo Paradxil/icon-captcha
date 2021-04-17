@@ -31,10 +31,16 @@ captchaSchema.plugin(encrypt, { secret: process.env.SECRET, excludeFromEncryptio
 const Captcha = mongoose.model('Captcha', captchaSchema);
 
 async function getCaptcha(id) {
+    if(id === null || id === undefined || id.length <= 0) {
+        return;
+    }
     return await Captcha.findOne({_id: id});
 }
 
 async function deleteCaptcha(id) {
+    if(id === null || id === undefined || id.length <= 0) {
+        return;
+    }
     return await Captcha.deleteOne({_id: id});
 }
 

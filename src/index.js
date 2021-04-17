@@ -59,6 +59,10 @@ app.get('/captcha/img', async (req, res) => {
 });
 
 app.post('/captcha', async (req, res) => {
+    if(req.body === null || req.body.x === null || req.body.y === null) {
+        res.sendStatus(500);
+    } 
+
     let attempt = {
         x: req.body.x,
         y: req.body.y
@@ -75,7 +79,11 @@ app.post('/captcha', async (req, res) => {
 });
 
 app.post('/captcha/verify', async (req, res) => {
-    let verified = await verifyCaptcha(req.body.id);
+    if(req.body === null || req.body.id === null) {
+        res.sendStatus(500);
+    } 
+
+    let verified = await verifyCaptcha(req.body.id||null);
     res.send({
         verified: verified
     });
