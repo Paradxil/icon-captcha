@@ -1,10 +1,9 @@
 var mongoose = require('mongoose');
 var encrypt = require('mongoose-encryption');
 var feather = require('feather-icons');
-const {svg2png} = require('svg-png-converter');
 const icons = Object.keys(feather.icons);
 
-const { createCanvas, Image } = require("canvas");
+const { createCanvas, Image, loadImage } = require("canvas");
 
 const numRects = 15;
 const maxWidth = 25;
@@ -165,18 +164,12 @@ async function addRandomIcon(ctx, width, height) {
 
 async function addIcon(ctx, icon, x, y, w, h) {
     return new Promise(async (resolve, reject) => {
-        let outputBuffer = await svg2png({ 
-            input: feather.icons[icon].toSvg({width: w, height: h}), 
-            encoding: 'buffer', 
-            format: 'png',
-            width: w,
-            height: h
-        });
-
-        const img = new Image()
-        img.onload = () => {ctx.drawImage(img, x, y, w, h); resolve();};
+        let svgimg = feather.icons[icon].toSvg({width: w, height: h});
+        
+        const img = new Image();
+        img.onload = async () => {ctx.drawImage(img, x, y, w, h);; resolve();};
         img.onerror = err => { reject(err); };
-        img.src = outputBuffer;
+        img.src = Buffer.from(svgimg);
     });
 }
 
@@ -204,9 +197,9 @@ async function generateImage(width = 500, height = 300) {
     ctx.fillStyle = "#f1f1f1";
     addRectangle(ctx, 0, height-bottomBorder, width, bottomBorder);
 
-    ctx.font = '12px "Comic Sans"'
+    ctx.font = '12px "Sans Serif"'
     ctx.fillStyle = "#000";
-    ctx.fillText('Click on', fontSize, height-((bottomBorder - fontSize)/2));
+    ctx.fillText('Click/tap the icon:', fontSize, height-((bottomBorder - fontSize)/2));
     await addIcon(ctx, squarePos.icon, width - 2*iconSize, height-iconSize - ((bottomBorder - iconSize)/2), iconSize, iconSize);
 
     return {
