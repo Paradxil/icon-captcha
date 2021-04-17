@@ -38,8 +38,6 @@ configure({
     fingerprintsEnabled: isProduction // Only add fingerprints to URLs in production
 });
 
-
-const port = 3000;
 const app = express();
 app.use(markoExpress()); //enable res.marko(template, data)
 app.use(serveStatic()); // Serve static assets with lasso)

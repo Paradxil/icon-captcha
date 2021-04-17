@@ -14,6 +14,8 @@ function loadCaptcha() {
         ifrm.style.border = "none";
 
         var textArea = document.createElement("textarea");
+        textArea.setAttribute('required', '');
+        textArea.setAttribute('aria-required', true);
         textArea.name = "captcha-id";
         textArea.style.display = "none";
 
