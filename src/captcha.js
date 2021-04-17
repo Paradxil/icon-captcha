@@ -56,7 +56,7 @@ module.exports.generateCaptcha = async function(width = 300, height = 200) {
             solution: JSON.stringify(imageData.squarePos)
         });
 
-        captcha.save();
+        await captcha.save();
 
         return {
             image: captcha.image,
@@ -76,11 +76,19 @@ module.exports.attemptCaptcha = async function(attempt, id) {
     if(captcha !== null) {
         if(captcha.attempt === null || captcha.attempt === undefined) {
             captcha.attempt = attempt;
-            captcha.save();
+            await captcha.save();
         }
-        return module.exports.verifyCaptcha(id, false);
+
+        let verified = await module.exports.verifyCaptcha(id, false);
+        return {
+            verified: verified,
+            submit: true
+        };
     }
-    return false;
+    return {
+        verified: false,
+        submit: false
+    }
 }
 
 /**

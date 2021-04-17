@@ -44,6 +44,7 @@ class {
         this.state.error = false;
         this.state.submit = false;
         this.state.expired = false;
+        this.state.verified = false;
 
         const options = {
             method: 'GET',
@@ -82,10 +83,19 @@ class {
             body: JSON.stringify(params)
         };
 
-        fetch(this.state.host + '/captcha', options).then(response => {
+        fetch(this.state.host + '/captcha', options).then(async response => {
             if(response.status === 200) {
+                let data = await response.json();
+
+                this.state.verified = data.verified||false;
                 this.state.submit = true;
-                window.parent.postMessage({captchaid: this.state.id},"*");
+
+                if(this.state.verified) {
+                    window.parent.postMessage({captchaid: this.state.id},"*");
+                }
+                else {
+                    this.state.error = true;
+                }
             }
             else {
                 this.state.error = true;
@@ -219,8 +229,12 @@ div.captcha-wrapper class={"captcha-submit": state.submit, "captcha-error": stat
                 div -- CAPTCHA EXPIRED
                 div.secondary -- hover/tap to load a new captcha
             else-if(state.submit)
-                div.primary -- CAPTCHA SUBMIT
-                div.secondary -- to try a new captcha click refresh
+                if(state.verified)
+                    div.primary -- CAPTCHA SUBMIT
+                else
+                    div.primary -- INVALID SUBMISSION
+                    div.secondary -- click refresh to try again
+
         img draggable='false' src=state.img on-click("submitCaptcha")
     div.captcha-footer
         div

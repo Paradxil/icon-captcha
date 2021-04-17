@@ -68,8 +68,8 @@ app.post('/captcha', async (req, res) => {
 
     let result = await attemptCaptcha(JSON.stringify(attempt), req.body.id);
 
-    if(result) {
-        res.sendStatus(200);
+    if(result.submit) {
+        res.send({verified: result.verified||false});
     }
     else {
         res.sendStatus(404);
