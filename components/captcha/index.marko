@@ -9,13 +9,26 @@ class {
             loaded: false,
             loading: false,
             expires: null,
-            expired: false
+            expired: false,
+            verified: false
         };
     }
     onMount() {
-        setInterval(() => {this.setStateDirty('expires');}, 500);
+        setInterval(this.isExpired.bind(this), 500);
+    }
+    isExpired() {
+        this.setStateDirty('expires');
+
+        let secondsLeft = Math.floor(this.state.expires - (Date.now()/1000));
+        if(secondsLeft <= 0 && !this.state.expired && this.state.loaded) {
+            this.state.error = true;
+            this.state.expired = true;
+            window.parent.postMessage({captchaid: ""},"*");
+        }
+
     }
     loadNewCaptcha() {
+        window.parent.postMessage({captchaid: ""},"*");
         this.state.loaded = false;
         this.loadCaptcha();
     }
@@ -43,7 +56,6 @@ class {
                 this.state.loaded = true;
                 this.state.loading = false;
                 this.state.expires = data.expires;
-                window.parent.postMessage({captchaid: this.state.id},"*");
             }
             else {
                 this.state.error = true;
@@ -73,6 +85,7 @@ class {
         fetch(this.state.host + '/captcha', options).then(response => {
             if(response.status === 200) {
                 this.state.submit = true;
+                window.parent.postMessage({captchaid: this.state.id},"*");
             }
             else {
                 this.state.error = true;
@@ -237,8 +250,6 @@ div.captcha-wrapper class={"captcha-submit": state.submit, "captcha-error": stat
                 }
                 else {
                     time = "expired";
-                    state.error = true;
-                    state.expired = true;
                 }
             }
             p.help title="Time until the captcha exires." -- ${time}
