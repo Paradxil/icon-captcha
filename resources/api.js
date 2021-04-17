@@ -4,17 +4,13 @@ window.addEventListener('load', (event) => {
     loadCaptcha();
 });
 
-window.addEventListener('onpopstate', (event) => {
-    loadCaptcha();
-});
-
 function loadCaptcha() {
     if(!document.getElementById("captcha-textarea")) {
         var ifrm = document.createElement("iframe");
         ifrm.setAttribute("src", "{{HOST}}/captcha");
         ifrm.setAttribute("sandbox", "allow-same-origin allow-scripts");
         ifrm.style.width = "324px";
-        ifrm.style.height = "125px";
+        ifrm.style.height = "135px";
         ifrm.style.border = "none";
 
         var textArea = document.createElement("textarea");
