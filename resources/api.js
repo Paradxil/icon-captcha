@@ -13,8 +13,7 @@ function loadCaptcha() {
         ifrm.style.height = "135px";
         ifrm.style.border = "none";
 
-        var textArea = document.createElement("INPUT");
-        textArea.setAttribute("type", "hidden");
+        var textArea = document.createElement("textarea");
         textArea.setAttribute('required', '');
         textArea.setAttribute('aria-required', true);
         textArea.name = "captcha-id";
