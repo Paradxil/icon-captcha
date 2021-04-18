@@ -68,6 +68,7 @@ class {
             return;
         }
         this.state.submit = true;
+        this.state.loading = true;
 
         const params = {
             x: event.offsetX,
@@ -88,7 +89,7 @@ class {
                 let data = await response.json();
 
                 this.state.verified = data.verified||false;
-                this.state.submit = true;
+                this.state.loading = false;
 
                 if(this.state.verified) {
                     window.parent.postMessage({captchaid: this.state.id},"*");
@@ -116,6 +117,10 @@ style {
     .captcha-message {
         position: absolute;
         text-align: center;
+        display:flex;
+        place-content: center;
+        align-items: center;
+        flex-direction: column;
     }
 
     .captcha-message .secondary {
@@ -140,6 +145,10 @@ style {
         overflow: hidden;
     }
 
+    .captcha-submit.loading .captcha-image{
+        border-color: yellow;
+    }
+
     .captcha-submit .captcha-image{
         border-color: lightgreen;
     }
@@ -157,7 +166,8 @@ style {
         border-color: lightcoral;
     }
 
-    .loading {
+    .loading-icon {
+        z-index: 10;
         background-color: #aaa;
         border-radius: 4px;
         width: 15px;
@@ -216,12 +226,12 @@ style {
     }
 }
 
-div.captcha-wrapper class={"captcha-submit": state.submit, "captcha-error": state.error, "not-loaded": !state.loaded}
+div.captcha-wrapper class={"captcha-submit": state.submit, "captcha-error": state.error, "not-loaded": !state.loaded, "loading": state.loading}
     div.captcha-image title=state.submit?"Only one submission allowed. If you clicked the wrong symbol try a new captcha by clicking refresh below.":"" on-mouseenter("loadCaptcha")
         div.captcha-message
             if(!state.loaded)
                 if(state.loading)
-                    div.loading
+                    div.loading-icon
                 else
                     div.primary -- CAPTCHA
                     div.secondary -- hover/tap to load
@@ -229,7 +239,10 @@ div.captcha-wrapper class={"captcha-submit": state.submit, "captcha-error": stat
                 div -- CAPTCHA EXPIRED
                 div.secondary -- hover/tap to load a new captcha
             else-if(state.submit)
-                if(state.verified)
+                if(state.loading)
+                    div.primary -- SUBMITTING CAPTCHA
+                    div.loading-icon
+                else-if(state.verified)
                     div.primary -- CAPTCHA SUBMIT
                 else
                     div.primary -- INVALID SUBMISSION
