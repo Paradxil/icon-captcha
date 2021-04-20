@@ -42,12 +42,19 @@ loadCaptcha();
 Upon successful completion of a captcha, the unique captcha id is stored in a form input. 
 You can access the captcha id via the `captchaid` POST parameter upon form submission.
 
+Client side you can also use one of the following functions to obtain the captcha id:
+```
+window.getCaptchaID();
+getCaptchaID();
+```
+
 ##### Step 3: Verify the captcha server side
 Captchas must be verified within 3 minutes of creation and can only be verified once. After verification the captcha is removed from the database. If verification fails the user must submit a new captcha.
 
 To verify a captcha make a post request to `https://iconcaptcha.com/captcha/verify` with the captcha id.
 
 **Verification Request**
+
 URL: `https://iconcaptcha.com/captcha/verify`
 METHOD: POST
 Parameter | Description
@@ -55,6 +62,7 @@ Parameter | Description
 id | The unique captcha id, available via the `captchaid` POST parameter upon form submission. 
 
 **Verification Response**
+
 TYPE: JSON
 ```
 {
