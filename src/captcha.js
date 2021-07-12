@@ -196,6 +196,10 @@ async function generateImage(width = 500, height = 300) {
     const fontSize = 12;
     const iconSize = 16;
 
+    //Draw white background
+    ctx.fillStyle = "#fff";
+    addRectangle(ctx, 0, 0, width, height);
+
     let usedIcons = [];
     for(let i = 0; i < numRects; i++) {
         let data = await addRandomIcon(ctx, width, height - bottomBorder);
@@ -215,7 +219,7 @@ async function generateImage(width = 500, height = 300) {
 
     ctx.font = '12px "Sans Serif"'
     ctx.fillStyle = "#000";
-    ctx.fillText('Click/tap the icon:', fontSize, height-((bottomBorder - fontSize)/2));
+    ctx.fillText('Click/tap the matching icon:', fontSize, height-((bottomBorder - fontSize)/2));
     await addIcon(ctx, squarePos.icon, width - 2*iconSize, height-iconSize - ((bottomBorder - iconSize)/2), iconSize, iconSize);
 
     return {
