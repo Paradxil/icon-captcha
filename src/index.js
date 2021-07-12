@@ -91,6 +91,7 @@ let apiFile = fs.readFileSync(__dirname + "/../resources/api.js", {encoding:'utf
 apiFile = apiFile.replace("{{HOST}}", process.env.HOST);
 
 app.get('/captcha/api.js', (req, res) => {
+    res.setHeader('content-type', 'text/javascript');
     res.send(apiFile);
 });
 
