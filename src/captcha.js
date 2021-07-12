@@ -98,11 +98,10 @@ module.exports.attemptCaptcha = async function(attempt, id) {
  * @returns {Boolean} Was the captcha successfully completed.
  */
 module.exports.verifyCaptcha = async function(id, remove=true) {
-    let captcha = await getCaptcha(id);
+    try {
+        let captcha = await getCaptcha(id);
 
-    if(captcha !== null) {
-        
-        try {
+        if(captcha !== null) {
             if(remove) {
                 deleteCaptcha(id);
             }
@@ -116,9 +115,10 @@ module.exports.verifyCaptcha = async function(id, remove=true) {
                 }
             }
         }
-        catch(err) {
-            console.log(err);
-        }
+    }
+    catch (err) {
+        console.log(err);
+        throw err;
     }
     return false;
 }
