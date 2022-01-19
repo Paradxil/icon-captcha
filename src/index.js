@@ -81,16 +81,24 @@ app.post('/captcha/verify', async (req, res) => {
         res.sendStatus(403);
     } 
 
-    let verified = await verifyCaptcha(req.body.id||null);
-    res.send({
-        verified: verified
-    });
+    try {
+        let verified = await verifyCaptcha(req.body.id||null);
+        res.send({
+            verified: verified
+        });
+    }
+    catch(err) {
+        res.send({
+            verified: false
+        });
+    }
 });
 
 let apiFile = fs.readFileSync(__dirname + "/../resources/api.js", {encoding:'utf8'});
 apiFile = apiFile.replace("{{HOST}}", process.env.HOST);
 
 app.get('/captcha/api.js', (req, res) => {
+    res.setHeader('content-type', 'text/javascript');
     res.send(apiFile);
 });
 
