@@ -51,9 +51,18 @@ module.exports.generateCaptcha = async function(width = 300, height = 200) {
             return null;
         }
 
+        // Calculate the captcha solution.
+        // Use percent of width and height to allow for image resizing on the front end.
+        let solution = {
+            x: imageData.iconPos.x/width,
+            y: imageData.iconPos.y/height,
+            w: imageData.iconPos.w/width,
+            h: imageData.iconPos.h/height
+        };
+
         let captcha = new Captcha({
             image: imageData.image,
-            solution: JSON.stringify(imageData.squarePos)
+            solution: JSON.stringify(solution)
         });
 
         await captcha.save();
@@ -206,12 +215,13 @@ async function generateImage(width = 500, height = 300) {
         usedIcons.push(data.icon);
     }
 
-    let squarePos = {
+    // Stores the location of the correct icon
+    let iconPos = {
         icon: null
     };
     
-    while(squarePos.icon === null || usedIcons.includes(squarePos.icon)) {
-        squarePos = await addRandomIcon(ctx, width, height - bottomBorder);
+    while(iconPos.icon === null || usedIcons.includes(iconPos.icon)) {
+        iconPos = await addRandomIcon(ctx, width, height - bottomBorder);
     }
 
     ctx.fillStyle = "#f1f1f1";
@@ -220,10 +230,10 @@ async function generateImage(width = 500, height = 300) {
     ctx.font = '12px "Sans Serif"'
     ctx.fillStyle = "#000";
     ctx.fillText('Click/tap the matching icon:', fontSize, height-((bottomBorder - fontSize)/2));
-    await addIcon(ctx, squarePos.icon, width - 2*iconSize, height-iconSize - ((bottomBorder - iconSize)/2), iconSize, iconSize);
+    await addIcon(ctx, iconPos.icon, width - 2*iconSize, height-iconSize - ((bottomBorder - iconSize)/2), iconSize, iconSize);
 
     return {
         image: canvas.toDataURL(),
-        squarePos: squarePos
+        iconPos: iconPos
     };
 }

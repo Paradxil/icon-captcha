@@ -9,7 +9,7 @@ function loadCaptcha() {
         var ifrm = document.createElement("iframe");
         ifrm.setAttribute("src", "{{HOST}}/captcha");
         ifrm.setAttribute("sandbox", "allow-same-origin allow-scripts allow-popups");
-        ifrm.style.width = "324px";
+        ifrm.style.width = "100%";
         ifrm.style.height = "135px";
         ifrm.style.border = "none";
 

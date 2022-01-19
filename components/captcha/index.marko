@@ -67,12 +67,16 @@ class {
         if(this.state.submit || this.state.expired || this.state.loading || !this.state.loaded) {
             return;
         }
+
         this.state.submit = true;
         this.state.loading = true;
 
+        let imgWidth = event.srcElement.clientWidth;
+        let imgHeight = event.srcElement.clientHeight;
+
         const params = {
-            x: event.offsetX,
-            y: event.offsetY,
+            x: event.offsetX/imgWidth,
+            y: event.offsetY/imgHeight,
             id: this.state.id
         };
 
@@ -115,7 +119,8 @@ style {
         font-family: sans-serif;
         display: flex;
         flex-direction: column;
-        width: calc(300px + 4px);
+        max-width: calc(300px + 4px);
+        width: 100%;
     }
 
     .captcha-message {
