@@ -56,6 +56,11 @@ app.get('/captcha/img', async (req, res) => {
     res.send({captchaid: captcha.id, img: captcha.image, expires: captcha.expires});
 });
 
+app.get('/captcha/img/placeholder', async (req, res) => {
+    let captcha = await generateCaptcha(300, 100, true);
+    res.send({img: captcha.image});
+});
+
 app.post('/captcha', async (req, res) => {
     if(req.body === null || req.body.x === null || req.body.y === null) {
         res.sendStatus(403);

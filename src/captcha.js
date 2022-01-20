@@ -43,9 +43,15 @@ async function deleteCaptcha(id) {
     return await Captcha.deleteOne({_id: id});
 }
 
-module.exports.generateCaptcha = async function(width = 300, height = 200) {
+module.exports.generateCaptcha = async function(width = 300, height = 200, placeholder = false) {
     try {
-        let imageData = await generateImage(width, height);
+        let imageData = await generateImage(width, height, placeholder);
+
+        if(placeholder) {
+            return {
+                image: imageData.image
+            };
+        }
 
         if(imageData == null || imageData.image == null) {
             return null;
@@ -198,16 +204,23 @@ async function addIcon(ctx, icon, x, y, w, h) {
     });
 }
 
-async function generateImage(width = 500, height = 300) {
+async function generateImage(width = 500, height = 300, placeholder=false) {
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");
     const bottomBorder = 25;
     const fontSize = 12;
     const iconSize = 16;
 
-    //Draw white background
+    // Draw white background.
     ctx.fillStyle = "#fff";
     addRectangle(ctx, 0, 0, width, height);
+
+    // If a placeholder don't add icons.
+    if(placeholder) {
+        return {
+            image: canvas.toDataURL()
+        };
+    }
 
     let usedIcons = [];
     for(let i = 0; i < numRects; i++) {

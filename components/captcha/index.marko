@@ -3,6 +3,7 @@ class {
         this.state = {
             id: null,
             img: null,
+            placeholder: null, // Stores the placeholder image
             host: input.host,
             submit: false,
             error: false,
@@ -15,6 +16,9 @@ class {
     }
     onMount() {
         setInterval(this.isExpired.bind(this), 500);
+
+        // Allows us to correctly size the captcha before loading a real captcha.
+        this.loadPlaceholderCaptcha();
     }
     isExpired() {
         this.setStateDirty('expires');
@@ -26,6 +30,20 @@ class {
             window.parent.postMessage({captchaid: ""},"*");
         }
 
+    }
+    loadPlaceholderCaptcha() {
+        const options = {
+            method: 'GET',
+        };
+
+        fetch(this.state.host + '/captcha/img/placeholder', options).then(response => response.json()).then((data) => {
+            if(data !== null && data.img) {
+                this.state.placeholder = data.img;
+            }
+            else {
+                this.state.error = true;
+            }
+        });
     }
     loadNewCaptcha() {
         window.parent.postMessage({captchaid: ""},"*");
@@ -131,6 +149,7 @@ style {
         align-items: center;
         flex-direction: column;
         height: 100%;
+        z-index: 1;
     }
 
     .captcha-message .secondary {
@@ -171,7 +190,7 @@ style {
         height: auto;
     }
 
-    .captcha-submit img, .captcha-error img {
+    .captcha-submit img, .captcha-error img, .not-loaded img {
         filter: blur(15px);
         opacity: 0.5;
     }
@@ -262,7 +281,7 @@ div.captcha-wrapper class={"captcha-submit": state.submit, "captcha-error": stat
                     div.primary -- INVALID SUBMISSION
                     div.secondary -- click refresh to try again
 
-        img draggable='false' src=state.img on-click("submitCaptcha")
+        img draggable='false' src=state.img?state.img:state.placeholder on-click("submitCaptcha")
     div.captcha-footer
         div
             p.help title="Click to load a new captcha." on-click("loadNewCaptcha") 
